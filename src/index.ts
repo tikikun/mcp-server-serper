@@ -128,22 +128,22 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         description: "Alternative terms as comma-separated string (e.g., 'tutorial,guide,course', 'documentation,manual')"
       }
     },
-    required: ["q", "gl", "hl"],
+    required: ["q"],
   };
 
   // Return list of tools with input schemas
   return {
     tools: [
       {
-        name: "google_search",
+        name: "web_search",
         description:
           "Tool to perform web searches via Serper API and retrieve rich results. It is able to retrieve organic search results, people also ask, related searches, and knowledge graph.",
         inputSchema: searchInputSchema,
       },
       {
-        name: "scrape",
+        name: "visit_tool",
         description:
-          "Tool to scrape a webpage and retrieve the text and, optionally, the markdown content. It will retrieve also the JSON-LD metadata and the head metadata.",
+          "Tool to allow AI model to visit and read a webpage and retrieve the text and, optionally, the markdown content. It will retrieve also the JSON-LD metadata and the head metadata.",
         inputSchema: {
           type: "object",
           properties: {
@@ -170,7 +170,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
  */
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   switch (request.params.name) {
-    case "google_search": {
+    case "web_search": {
       const {
         q,
         gl,
@@ -194,7 +194,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         or
       } = request.params.arguments || {};
 
-      if (!q || !gl || !hl) {
+      if (!q) {
         throw new Error(
           "Search query and region code and language are required"
         );
@@ -236,7 +236,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
     }
 
-    case "scrape": {
+    case "visit_tool": {
       const url = request.params.arguments?.url as string;
       const includeMarkdown = request.params.arguments
         ?.includeMarkdown as boolean;

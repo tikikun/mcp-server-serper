@@ -29,7 +29,7 @@ export class SerperSearchTools {
    */
   async search(params: ISearchParams): Promise<ISearchResult> {
     try {
-      const result = await this.serperClient.search(params);
+      const result = await this.serperClient.search({ q: params.q });
       return result;
     } catch (error) {
       throw new Error(
